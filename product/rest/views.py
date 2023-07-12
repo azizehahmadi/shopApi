@@ -10,10 +10,12 @@ from rest_framework.permissions import IsAdminUser, AllowAny
 from product.rest.permissions import AdminOrReadOnly
 from rest_framework import viewsets
 from product.rest.pagination import ProductPagination
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 # filter category by admin
 class ProductCategoryViewBYAdmin(generics.ListAPIView):
     permission_classes = [IsAdminUser]
+    authentication_classes = [JWTAuthentication]
     queryset = ProductCategory.objects.all()
     serializer_class = ProductCategorySerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
@@ -33,6 +35,8 @@ class ProductCategoryView(generics.ListAPIView):
 # get by id and update and delete category by admin
 class ProductCategoryDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAdminUser]
+    authentication_classes = [JWTAuthentication]
+
     serializer_class = ProductCategorySerializer
     model = ProductCategory
     def get_queryset(self):
@@ -41,6 +45,8 @@ class ProductCategoryDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 # save category by admin
 class ProductCategoryCreateView(APIView):
+    authentication_classes = [JWTAuthentication]
+
     permission_classes = [IsAdminUser]
     def post(self, request):
         serializer = ProductCategorySerializer(data=request.data)
